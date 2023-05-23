@@ -1,0 +1,64 @@
+#coinsTableBody img {
+  width: 25px;
+  position: relative;
+  top: 3px;
+  left: 5px;
+}
+
+#coinsTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#coinsTable td,
+#coinsTable th {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+#coinsTable img {
+  margin-right: 5px;
+}
+
+#coinsTable td:last-child {
+  background-color: #fff;
+  cursor: default;
+  text-align: center;
+}
+
+#coinsTable td:first-child {
+  padding: 2px;
+}
+
+#coinsTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#coinsTable tr:hover {
+  background-color: #ddd;
+}
+
+#coinsTable tbody tr {
+  cursor: pointer;
+}
+
+#coinsTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+
+#coinModalBody img {
+  width: 25px;
+}
+
+.favourites:hover {
+  cursor: pointer;
+}
+#searchInput {
+  border-radius: 10px;
+  padding: 2px;
+}
