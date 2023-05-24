@@ -1,14 +1,18 @@
+const API_KEY = '92cafd2032msh75252a91a66893ap1128bdjsn75fcdc8c70ba';
+const API_HOST = 'coinranking1.p.rapidapi.com';
+const REFERENCE_CURRENCY_UUID = 'yhjMzLPhuIDl';
+
 const options = {
     method: 'GET',
     headers: {
-        'X-RapidAPI-Key': '92cafd2032msh75252a91a66893ap1128bdjsn75fcdc8c70ba',
-        'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
+        'X-RapidAPI-Key': API_KEY,
+        'X-RapidAPI-Host': API_HOST
     }
 };
 
 let coins;
 // Pobranie danych z API
-fetch('https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=25&offset=0', options)
+fetch(`https://${API_HOST}/coins?referenceCurrencyUuid=${REFERENCE_CURRENCY_UUID}&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=25&offset=0`, options)
     .then(response => response.json())
     .then(response => getDataFromApi(response.data))
     .catch(err => console.error(err));
