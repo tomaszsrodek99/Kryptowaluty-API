@@ -1,4 +1,3 @@
-//import Chart from 'chart.js';
 const options = {
     method: 'GET',
     headers: {
@@ -9,7 +8,7 @@ const options = {
 
 let coins;
 // Pobranie danych z API
-fetch('https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=150&offset=0', options)
+fetch('https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=25&offset=0', options)
     .then(response => response.json())
     .then(response => getDataFromApi(response.data))
     .catch(err => console.error(err));
@@ -84,14 +83,57 @@ function createCoinsTable(data) {
             <td>${priceFormatted}</td>
             <td><font color=${changeColor}>${element.change}</td>
             <td>${marketCapFormatted}</td>
+            <td>
+                <div class="chartContainer">
+                    <canvas id="myChart-${element.uuid}" class="myChart"></canvas>
+                </div>
+            </td>
             <td><i id="icon${element.uuid}" class="fa-solid fa-star ${isCoinInFavourite ? 'text-warning' : ''}" onClick="addCoinToFavourites(this.id)"></i></td>
 
         </tr>
         `;
+        getCoinPriceHistory(element, `myChart-${element.uuid}`);
     });
 }
 
-console.log(favouritesList);
+function getCoinPriceHistory(coinInfo, chartId) {
+    let coinId = coinInfo.uuid;
+    fetch('https://coinranking1.p.rapidapi.com/coin/' + coinId + '/history?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h', options)
+        .then(response => response.json())
+        .then(response => displayCoinModalInfo(coinInfo, response, chartId))
+        .catch(err => console.error(err));
+}
+
+function displayCoinModalInfo(coinData, priceHistory, chartId) {
+    let price = [];
+    let dates = [];
+    var interval = Math.floor(priceHistory.data.history.length / 30);
+    for (var i = 0; i < priceHistory.data.history.length; i += interval) {
+        if (priceHistory.data.history[i].price !== null) {
+            price.push(parseInt((priceHistory.data.history[i].price)).toFixed(2));
+            dates.push(convertTimeStampToDate(priceHistory.data.history[i].timestamp * 1000));
+        } else {
+            // if price is null get next not null value
+            for (var j = i + 1; j < priceHistory.data.history.length; j++) {
+                if (priceHistory.data.history[j].price !== null) {
+                    price.push(priceHistory.data.history[j].price);
+                    dates.push(convertTimeStampToDate(priceHistory.data.history[j].timestamp * 1000));
+                    break;
+                }
+            }
+        }
+    }
+    price = price.reverse();
+    dates = dates.reverse();
+    createChart(dates, price, chartId);
+}
+
+function convertTimeStampToDate(timestamp) {
+    //date = new Date(timestamp).toLocaleDateString("en-GB");
+    hours = new Date(timestamp).toLocaleTimeString("en-GB");
+    return hours;
+}
+//console.log(favouritesList);
 
 function showFavourites() {
     // Tworzenie okienka z listą ulubionych
@@ -217,4 +259,36 @@ function changeCoinModalData(coinData) {
         <img src="${coinData.iconUrl}" />
         <p>${coinData.description}</p>
     `;
+}
+
+function createChart(dates, data, chartId) {
+    new Chart(chartId, {
+        type: "line",
+        data: {
+            labels: dates,
+            datasets: [{
+                backgroundColor: "rgba(0,100,0,0.5)",
+                borderColor: "rgba(0,0,0,0.1)",
+                data: data
+            }]
+        },
+        options: {
+            legend: { display: false },
+            stacked: false,
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Price'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }]
+            }
+        }
+    });
 }

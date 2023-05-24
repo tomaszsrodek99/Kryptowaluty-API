@@ -42,7 +42,7 @@
     <table id="coinsTable">
       <thead>
         <tr>
-          <th colspan="7">
+          <th colspan="8">
             <input type="text" id="searchInput" placeholder="Search by name" onkeyup="filterCoinsTable()">
           </th>
         </tr>
@@ -53,6 +53,7 @@
           <th onClick="updateSortParams('price')">Price <span id="priceSortIndicator"></span></th>
           <th onClick="updateSortParams('change')">Change <span id="changeSortIndicator"></span></th>
           <th onClick="updateSortParams('marketCap')">Capitalization <span id="marketCapSortIndicator"></span></th>
+          <th>Chart (24h)</th>
           <th>Ulubione</th>
         </tr>
       </thead>
@@ -80,6 +81,7 @@
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
   <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 </body>
 
 </html>
